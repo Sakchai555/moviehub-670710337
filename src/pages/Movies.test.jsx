@@ -53,3 +53,19 @@ test('พิมพ์ค้นหา ต้องกรองในเครื�
   expect(screen.getByText('Your Name')).toBeInTheDocument();
   expect(getMovies).toHaveBeenCalledTimes(1);          // ยังเรียกแค่ตอนโหลดครั้งแรก
 });
+
+test('backend ล่ม ต้องเห็นข้อความ error และปุ่มลองใหม่ที่โหลดอีกครั้งได้', async () => {
+  const user = userEvent.setup();
+  getMovies
+    .mockRejectedValueOnce(new Error('server ไม่ได้ตอบเป็น JSON'))   // ครั้งแรกพัง
+    .mockResolvedValueOnce(FAKE_MOVIES);                             // ครั้งที่สองสำเร็จ
+  renderMovies();
+
+  expect(await screen.findByText('โหลดข้อมูลไม่สำเร็จ')).toBeInTheDocument();
+  expect(screen.getByText('server ไม่ได้ตอบเป็น JSON')).toBeInTheDocument();
+
+  await user.click(screen.getByRole('button', { name: 'ลองใหม่' }));
+
+  expect(await screen.findByText('Parasite')).toBeInTheDocument();
+  expect(getMovies).toHaveBeenCalledTimes(2);
+});
