@@ -4,7 +4,8 @@ import MovieCard from './MovieCard';
 const PER_PAGE = 4;
 
 // แถบหนังแนะนำแบบเลื่อนซ้ายขวา รับ movies ที่สลับลำดับมาแล้วจากแม่ ตัวเองจำแค่ว่าอยู่ชุดที่เท่าไร
-function FeaturedCarousel({ movies }) {
+function FeaturedCarousel({ movies: movieData }) {
+  const movies = Array.isArray(movieData) ? movieData : [];
   const [page, setPage] = useState(0);
   const total = Math.ceil(movies.length / PER_PAGE);   // จำนวนชุด เช่น 10 เรื่อง = 3 ชุด
 

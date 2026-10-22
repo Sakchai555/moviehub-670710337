@@ -37,8 +37,14 @@ function MovieDetail() {
   useEffect(() => {
     let ignore = false;
     getReviews(id)
-      .then(data => { if (!ignore) setReviews(data.items); })
-      .catch(() => { if (!ignore) setReviews([]); });   // backend ล่มก็แค่ไม่มีรีวิว หน้าหนังยังดูได้
+  .then(data => {
+    if (!ignore) {
+      setReviews(Array.isArray(data?.items) ? data.items : []);
+    }
+  })
+  .catch(() => {
+    if (!ignore) setReviews([]);
+  });
     return () => { ignore = true; };
   }, [id]);
 
